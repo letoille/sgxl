@@ -33,6 +33,16 @@ def load_xl_data() -> list[dict]:
                 "answer": answer,
             }
         )
+    qas = json.load(open("data/ms.json", "r"))
+    for qa in qas:
+        question = qa["question"]
+        answer = qa["answer"]
+        documents.append(
+            {
+                "question": question,
+                "answer": answer,
+            }
+        )
     return documents
 
 def load_to_chroma():
