@@ -24,25 +24,30 @@ app.add_middleware(
 def load_xl_data() -> list[dict]:
     qas = json.load(open("data/xl.json", "r"))
     documents = []
+    seen = set() 
     for qa in qas:
         question = qa["question"]
         answer = qa["answer"]
-        documents.append(
-            {
-                "question": question,
-                "answer": answer,
-            }
-        )
+        if (question, answer) not in seen:
+            documents.append(
+                {
+                    "question": question,
+                    "answer": answer,
+                }
+            )
+            seen.add((question, answer))
     qas = json.load(open("data/ms.json", "r"))
     for qa in qas:
         question = qa["question"]
         answer = qa["answer"]
-        documents.append(
-            {
-                "question": question,
-                "answer": answer,
-            }
-        )
+        if (question, answer) not in seen:
+            seen.add((question, answer))
+            documents.append(
+                {
+                    "question": question,
+                    "answer": answer,
+                }
+            )
     return documents
 
 def load_to_chroma():
