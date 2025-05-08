@@ -9,7 +9,7 @@ app = FastAPI()
 client = chromadb.PersistentClient(path="persist")
 try:
     collection = client.get_collection("sgxl")
-except chromadb.CollectionNotFoundException:
+except Exception as e:
     collection = client.create_collection("sgxl")
 
 def load_xl_data() -> list[dict]:
