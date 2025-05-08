@@ -64,7 +64,10 @@ class Question(BaseModel):
 @app.post('/api/xl/question')
 def xl_question(question: Question):
     try:
-        answer = collection.query(query_texts=[question.question], n_results=5, where_document={"$contains": question.question[:2]})
+        f_len = 2
+        if len(question.question) > 6:
+            f_len = len(question.question) // 3 + 1
+        answer = collection.query(query_texts=[question.question], n_results=5, where_document={"$contains": question.question[:f_len]})
         logging.info(answer)
         if not answer or not answer.get('metadatas') or len(answer.get('metadatas')) == 0:
             return [{
