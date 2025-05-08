@@ -4,6 +4,12 @@ with open("data/ms.md", "r") as f:
     lines = f.readlines()
     qas = []
     seen = set()  # 用于记录已处理的问答对
+    with open("data/xl.json", "r") as xlf:
+        xls = json.load(xlf)
+        for qa in xls:
+            question = qa["question"]
+            answer = qa["answer"]
+            seen.add((question, answer))
     for line in lines:
         line = line.strip()
         segs = line.split("-----")
