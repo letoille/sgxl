@@ -51,7 +51,7 @@ def load_to_chroma():
 class Question(BaseModel):
     question: str
 
-@app.post('/xl/question')
+@app.post('/api/xl/question')
 def xl_question(question: Question):
     try:
         answer = collection.query(query_texts=[question.question], n_results=5)
@@ -81,4 +81,4 @@ if __name__ == "__main__":
     else:
         logging.info("ChromaDB already loaded, skipping load.")
 
-    uvicorn.run(app, host="0.0.0.0", port=9527)
+    uvicorn.run(app, host="127.0.0.1", port=9527)
