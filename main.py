@@ -1,6 +1,7 @@
 import logging
 import json
 
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
 import chromadb
@@ -11,6 +12,14 @@ try:
     collection = client.get_collection("sgxl")
 except Exception as e:
     collection = client.create_collection("sgxl")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 def load_xl_data() -> list[dict]:
     qas = json.load(open("data/xl.json", "r"))
@@ -45,7 +54,7 @@ class Question(BaseModel):
 @app.post('/xl/question')
 def xl_question(question: Question):
     try:
-        answer = collection.query(query_texts=[question.question], n_results=3)
+        answer = collection.query(query_texts=[question.question], n_results=5)
         logging.info(answer)
         if not answer or not answer.get('metadatas') or len(answer.get('metadatas')) == 0:
             return {
